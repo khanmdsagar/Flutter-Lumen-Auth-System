@@ -1,5 +1,7 @@
+import 'package:app/controllers/LoginController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class VerifyScreen extends StatelessWidget {
 
@@ -7,9 +9,30 @@ class VerifyScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final otp      = TextEditingController();
 
+  final loginController = Get.put(LoginController());
+
   verify(){
-    Get.toNamed('/register');
+    final box = GetStorage();
+    var storedOtp = box.read('stored_otp');
+
+    if(storedOtp == otp.text){
+      Get.toNamed('/register');
+    }
+    else{
+      Get.snackbar(
+        "OTP didn't match",
+        "The otp you entered is not the same that has sent",
+        backgroundColor: Colors.red,
+        snackPosition: SnackPosition.TOP,
+        borderRadius: 5,
+        margin: EdgeInsets.fromLTRB(10,10,10,10),
+        duration: Duration(seconds: 3),
+        icon: Icon(Icons.notifications, color: Colors.white),
+        colorText: Colors.white,
+      );
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +58,7 @@ class VerifyScreen extends StatelessWidget {
                     key: _formKey,
                     child: Column(
                       children: [
+
                         TextFormField(
                             controller: otp,
                             keyboardType: TextInputType.number,
@@ -60,15 +84,10 @@ class VerifyScreen extends StatelessWidget {
                               elevation: 0,
                               shadowColor: Colors.transparent,
                               minimumSize: const Size.fromHeight(50)),
-                          child: isLoading
-                              ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                  strokeWidth: 2, color: Colors.white))
-                              : const Text("Verify",
-                              style: TextStyle(fontSize: 15)),
+
+                          child: const Text("Verify", style: TextStyle(fontSize: 15))
                         )
+
                       ],
                     ),
                   ),

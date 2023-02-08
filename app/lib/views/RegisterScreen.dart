@@ -1,3 +1,4 @@
+import 'package:app/controllers/LoginController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -6,6 +7,8 @@ class RegisterScreen extends StatelessWidget {
   bool isLoading     = false;
   final _formKey     = GlobalKey<FormState>();
   final userFullname = TextEditingController();
+
+  final loginController = Get.put(LoginController());
 
   register() {
     Get.toNamed('/home');
@@ -62,14 +65,12 @@ class RegisterScreen extends StatelessWidget {
                               elevation: 0,
                               shadowColor: Colors.transparent,
                               minimumSize: const Size.fromHeight(50)),
-                          child: isLoading
-                              ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                  strokeWidth: 2, color: Colors.white))
-                              : const Text("Submit",
-                              style: TextStyle(fontSize: 15)),
+
+                          child:  Obx((){
+                            return loginController.isLoading.value
+                                ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                                : const Text("Go next", style: TextStyle(fontSize: 15));
+                          })
                         )
 
                       ],

@@ -1,14 +1,40 @@
+import 'package:app/controllers/LoginController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'dart:math';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
-  bool isLoading = false;
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+
+  int otp        = Random().nextInt(9999 - 1000) + 1000;
   final _formKey = GlobalKey<FormState>();
-  final userEmail = TextEditingController();
+  final email    = TextEditingController();
 
-  login() {
-    Get.toNamed('/verify');
+  final loginController = Get.put(LoginController());
+
+  login(){
+    if(GetUtils.isEmail(email.text)){
+      loginController.sendOTP(email.text, otp.toString());
+    }
+    else{
+      Get.snackbar(
+        "Invalid Email",
+        "The email you entered is not a valid email address",
+        backgroundColor: Colors.red,
+        snackPosition: SnackPosition.TOP,
+        borderRadius: 5,
+        margin: EdgeInsets.fromLTRB(10,10,10,10),
+        duration: Duration(seconds: 3),
+        icon: Icon(Icons.notifications, color: Colors.white),
+        colorText: Colors.white,
+      );
+    }
   }
 
   @override
@@ -45,7 +71,7 @@ class LoginScreen extends StatelessWidget {
                         const SizedBox(height: 20),
 
                         TextFormField(
-                            controller: userEmail,
+                            controller: email,
                             validator: (val) {
                               if (val!.isEmpty) {
                                 return "Enter email address";
@@ -68,14 +94,12 @@ class LoginScreen extends StatelessWidget {
                               elevation: 0,
                               shadowColor: Colors.transparent,
                               minimumSize: const Size.fromHeight(50)),
-                          child: isLoading
-                              ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                  strokeWidth: 2, color: Colors.white))
-                              : const Text("Go next",
-                              style: TextStyle(fontSize: 15)),
+
+                          child: Obx((){
+                            return loginController.isLoading.value
+                                ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                                : const Text("Go next", style: TextStyle(fontSize: 15));
+                          })
                         )
 
                       ],

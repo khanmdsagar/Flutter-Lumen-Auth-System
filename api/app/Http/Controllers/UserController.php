@@ -18,10 +18,10 @@ class UserController extends Controller
 
         try {
             Mail::to($email)->send(new OTP($otp));
-            return [['status' => "success"]];
+            return ['status' => 'success'];
         }
         catch (\Exception $e){
-            return [['status' => "failed"]];
+            return ['status' => 'failed'];
         }
     }
 
