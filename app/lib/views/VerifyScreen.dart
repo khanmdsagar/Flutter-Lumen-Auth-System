@@ -1,4 +1,5 @@
-import 'package:app/controllers/LoginController.dart';
+import 'package:app/Utilities/Utility.dart';
+import 'package:app/controllers/LoginRegisterationController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -9,26 +10,20 @@ class VerifyScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final otp      = TextEditingController();
 
-  final loginController = Get.put(LoginController());
+  final loginRegisterationController = Get.put(LoginRegisterationController());
 
   verify(){
-    final box = GetStorage();
-    var storedOtp = box.read('stored_otp');
+    final box       = GetStorage();
+    var storedOtp   = box.read('stored_otp');
+    var storedEmail = box.read('stored_email');
 
     if(storedOtp == otp.text){
-      Get.toNamed('/register');
+      loginRegisterationController.authenticate(storedEmail);
     }
     else{
-      Get.snackbar(
+      failedAlert(
         "OTP didn't match",
         "The otp you entered is not the same that has sent",
-        backgroundColor: Colors.red,
-        snackPosition: SnackPosition.TOP,
-        borderRadius: 5,
-        margin: EdgeInsets.fromLTRB(10,10,10,10),
-        duration: Duration(seconds: 3),
-        icon: Icon(Icons.notifications, color: Colors.white),
-        colorText: Colors.white,
       );
     }
   }
@@ -64,11 +59,11 @@ class VerifyScreen extends StatelessWidget {
                             keyboardType: TextInputType.number,
                             validator: (val) {
                               if (val!.isEmpty) {
-                                return "Enter OTP";
+                                return "OTP field can't be empty";
                               }
                             },
                             decoration: const InputDecoration(
-                              hintText: "OTP",
+                              hintText: "Enter OTP",
                               prefixIcon: Icon(Icons.lock),
                             )),
                         const SizedBox(height: 20),
@@ -85,7 +80,11 @@ class VerifyScreen extends StatelessWidget {
                               shadowColor: Colors.transparent,
                               minimumSize: const Size.fromHeight(50)),
 
-                          child: const Text("Verify", style: TextStyle(fontSize: 15))
+                          child: Obx((){
+                            return loginRegisterationController.isLoading.value
+                                ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                                : const Text("Verify", style: TextStyle(fontSize: 15));
+                          })
                         )
 
                       ],

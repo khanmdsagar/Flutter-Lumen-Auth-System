@@ -1,4 +1,4 @@
-import 'package:app/controllers/LoginController.dart';
+import 'package:app/controllers/LoginRegisterationController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:math';
@@ -16,11 +16,11 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final email    = TextEditingController();
 
-  final loginController = Get.put(LoginController());
+  final loginRegisterationController = Get.put(LoginRegisterationController());
 
   login(){
     if(GetUtils.isEmail(email.text)){
-      loginController.sendOTP(email.text, otp.toString());
+      loginRegisterationController.sendOTP(email.text, otp.toString());
     }
     else{
       Get.snackbar(
@@ -96,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               minimumSize: const Size.fromHeight(50)),
 
                           child: Obx((){
-                            return loginController.isLoading.value
+                            return loginRegisterationController.isLoading.value
                                 ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                                 : const Text("Go next", style: TextStyle(fontSize: 15));
                           })

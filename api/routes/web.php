@@ -12,5 +12,5 @@ $router->get('/', function () use ($router) {
 });
 
 $router->post('/api/send-otp', ['middleware'=> 'app_check', 'uses'=> 'UserController@send_otp']);
-$router->post('/api/authenticate-user', 'UserController@authenticate_user');
+$router->post('/api/authenticate-user', ['middleware'=> 'app_check', 'uses'=>'UserController@authenticate_user']);
 $router->post('/api/register-user', ['middleware'=> 'app_check', 'uses'=> 'UserController@register_user']);

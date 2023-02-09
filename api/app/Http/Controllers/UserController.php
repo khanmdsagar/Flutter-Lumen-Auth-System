@@ -40,14 +40,14 @@ class UserController extends Controller
 
             try{
                 $jwt = JWT::encode($payload, $key, 'HS256');
-                return [['token' => $jwt, 'status' => '200']];
+                return ['token' => $jwt, 'status' => 'success'];
             }
             catch(\Exception $e){
-                return [['status' => "failed"]];
+                return ['status' => "failed"];
             }
         }
         else{
-            return [['status' => "404"]];
+            return ['status' => "404"];
         }
     }
 

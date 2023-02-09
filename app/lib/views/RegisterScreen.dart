@@ -1,16 +1,16 @@
-import 'package:app/controllers/LoginController.dart';
+import 'package:app/controllers/LoginRegisterationController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class RegisterScreen extends StatelessWidget {
 
-  bool isLoading     = false;
-  final _formKey     = GlobalKey<FormState>();
-  final userFullname = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  final fullname = TextEditingController();
 
-  final loginController = Get.put(LoginController());
+  final loginRegisterationController = Get.put(LoginRegisterationController());
 
   register() {
+
     Get.toNamed('/home');
   }
 
@@ -41,7 +41,7 @@ class RegisterScreen extends StatelessWidget {
                       children: [
 
                         TextFormField(
-                            controller: userFullname,
+                            controller: fullname,
                             validator: (val) {
                               if (val!.isEmpty) {
                                 return "Enter fullname";
@@ -67,7 +67,7 @@ class RegisterScreen extends StatelessWidget {
                               minimumSize: const Size.fromHeight(50)),
 
                           child:  Obx((){
-                            return loginController.isLoading.value
+                            return loginRegisterationController.isLoading.value
                                 ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                                 : const Text("Go next", style: TextStyle(fontSize: 15));
                           })
