@@ -1,3 +1,4 @@
+import 'package:app/middlewares/AuthMiddleware.dart';
 import 'package:app/views/HomeScreen.dart';
 import 'package:app/views/LoginScreen.dart';
 import 'package:app/views/RegisterScreen.dart';
@@ -24,27 +25,28 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: '/home',
       getPages: [
         GetPage(
             name: '/',
-            page: () => LoginScreen(),
+            page: () => const LoginScreen(),
         ),
         GetPage(
             name: '/verify',
             page: () => VerifyScreen(),
-            transition: Transition.rightToLeft
+            transition: Transition.rightToLeft,
         ),
         GetPage(
             name: '/register',
             page: () => RegisterScreen(),
-            transition: Transition.rightToLeft
+            transition: Transition.rightToLeft,
         ),
 
         GetPage(
             name: '/home',
             page: () => HomeScreen(),
-            transition: Transition.rightToLeft
+            transition: Transition.rightToLeft,
+            middlewares: [AuthMiddleware()]
         ),
       ],
     );

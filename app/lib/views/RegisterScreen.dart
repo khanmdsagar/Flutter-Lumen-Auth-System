@@ -1,17 +1,20 @@
-import 'package:app/controllers/LoginRegisterationController.dart';
+import 'package:app/controllers/AuthController.dart';
+import 'package:app/models/User.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class RegisterScreen extends StatelessWidget {
 
-  final _formKey = GlobalKey<FormState>();
-  final fullname = TextEditingController();
+  final _formKey  = GlobalKey<FormState>();
+  final fullname  = TextEditingController();
+  final box       = GetStorage();
 
-  final loginRegisterationController = Get.put(LoginRegisterationController());
+  final authController = Get.put(AuthController());
 
   register() {
-
-    Get.toNamed('/home');
+    var storedEmail = box.read('stored_email');
+    authController.register(fullname.text, storedEmail);
   }
 
   @override
@@ -67,7 +70,7 @@ class RegisterScreen extends StatelessWidget {
                               minimumSize: const Size.fromHeight(50)),
 
                           child:  Obx((){
-                            return loginRegisterationController.isLoading.value
+                            return authController.isLoading.value
                                 ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                                 : const Text("Go next", style: TextStyle(fontSize: 15));
                           })

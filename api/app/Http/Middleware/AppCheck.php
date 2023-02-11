@@ -16,7 +16,7 @@ class AppCheck
     public function handle($request, Closure $next)
     {
         // Pre-Middleware Action
-        $app_key = strip_tags(trim($request->input('app_key')));
+        $app_key = strip_tags(trim($request->header('Authorization')));
         $key = env('APP_KEY');
 
         

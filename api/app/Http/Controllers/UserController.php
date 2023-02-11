@@ -17,11 +17,11 @@ class UserController extends Controller
         $otp     = strip_tags(trim($request->input('otp')));
 
         try {
-            Mail::to($email)->send(new OTP($otp));
-            return ['status' => 'success'];
+            //Mail::to($email)->send(new OTP($otp));
+            return ['status' => '200'];
         }
         catch (\Exception $e){
-            return ['status' => 'failed'];
+            return ['status' => '400'];
         }
     }
 
@@ -40,10 +40,10 @@ class UserController extends Controller
 
             try{
                 $jwt = JWT::encode($payload, $key, 'HS256');
-                return ['token' => $jwt, 'status' => 'success'];
+                return ['token' => $jwt, 'status' => '200'];
             }
             catch(\Exception $e){
-                return ['status' => "failed"];
+                return ['status' => "400"];
             }
         }
         else{
@@ -66,18 +66,18 @@ class UserController extends Controller
                 ]);
     
                 if($result){
-                    return [['status' => "success"]];
+                    return ['status' => "200"];
                 }
                 else{
-                    return [['status' => "failed"]];
+                    return ['status' => "400"];
                 }
             }
             catch (\Exception $e){
-                return [['status' => "failed"]];
+                return ['status' => "400"];
             }
         }
         else{
-            return [['status' => "user exists"]];
+            return ['status' => "409"];
         }
     }
 

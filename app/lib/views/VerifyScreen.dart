@@ -1,5 +1,5 @@
 import 'package:app/Utilities/Utility.dart';
-import 'package:app/controllers/LoginRegisterationController.dart';
+import 'package:app/controllers/AuthController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -9,19 +9,19 @@ class VerifyScreen extends StatelessWidget {
   bool isLoading = false;
   final _formKey = GlobalKey<FormState>();
   final otp      = TextEditingController();
+  final box      = GetStorage();
 
-  final loginRegisterationController = Get.put(LoginRegisterationController());
+  final authController = Get.put(AuthController());
 
   verify(){
-    final box       = GetStorage();
     var storedOtp   = box.read('stored_otp');
     var storedEmail = box.read('stored_email');
 
     if(storedOtp == otp.text){
-      loginRegisterationController.authenticate(storedEmail);
+      authController.authenticate(storedEmail);
     }
     else{
-      failedAlert(
+      Utility().failedAlert(
         "OTP didn't match",
         "The otp you entered is not the same that has sent",
       );
@@ -81,7 +81,7 @@ class VerifyScreen extends StatelessWidget {
                               minimumSize: const Size.fromHeight(50)),
 
                           child: Obx((){
-                            return loginRegisterationController.isLoading.value
+                            return authController.isLoading.value
                                 ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                                 : const Text("Verify", style: TextStyle(fontSize: 15));
                           })
