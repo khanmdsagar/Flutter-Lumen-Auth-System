@@ -1,3 +1,4 @@
+import 'package:app/Utilities/Utility.dart';
 import 'package:app/controllers/AuthController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,17 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
       authController.sendOTP(email.text, otp.toString());
     }
     else{
-      Get.snackbar(
-        "Invalid Email",
-        "The email you entered is not a valid email address",
-        backgroundColor: Colors.red,
-        snackPosition: SnackPosition.TOP,
-        borderRadius: 5,
-        margin: EdgeInsets.fromLTRB(10,10,10,10),
-        duration: Duration(seconds: 3),
-        icon: Icon(Icons.notifications, color: Colors.white),
-        colorText: Colors.white,
-      );
+      Utility().failedAlert("Invalid email", "the email you have entered is not a valid email");
     }
   }
 

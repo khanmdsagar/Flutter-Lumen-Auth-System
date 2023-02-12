@@ -1,10 +1,10 @@
-import 'package:app/controllers/HomeController.dart';
+import 'package:app/controllers/AuthController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class HomeScreen extends StatelessWidget {
 
-  final homeController = Get.put(HomeController());
+  final authController = Get.put(AuthController());
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +12,7 @@ class HomeScreen extends StatelessWidget {
       body: Center(
         child: TextButton(
           onPressed: (){
-            homeController.logOut();
+            authController.logOut();
           }, child: Text("Logout"),
         )
       ),

@@ -1,5 +1,6 @@
 import 'package:app/controllers/AuthController.dart';
 import 'package:app/models/User.dart';
+import 'package:app/utilities/Utility.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -13,8 +14,16 @@ class RegisterScreen extends StatelessWidget {
   final authController = Get.put(AuthController());
 
   register() {
-    var storedEmail = box.read('stored_email');
-    authController.register(fullname.text, storedEmail);
+   try{
+     var storedEmail = box.read('stored_email');
+     authController.register(fullname.text, storedEmail);
+   }
+   catch(e){
+     Utility().failedAlert(
+       "Failed",
+       "Registration can't be completed",
+     );
+   }
   }
 
   @override

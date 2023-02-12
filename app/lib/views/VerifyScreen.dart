@@ -12,18 +12,24 @@ class VerifyScreen extends StatelessWidget {
   final box      = GetStorage();
 
   final authController = Get.put(AuthController());
+  var getPassedData    = Get.arguments;
 
   verify(){
-    var storedOtp   = box.read('stored_otp');
-    var storedEmail = box.read('stored_email');
-
-    if(storedOtp == otp.text){
-      authController.authenticate(storedEmail);
+    try{
+      if(getPassedData[1] == otp.text){
+        authController.authenticate(getPassedData[0]);
+      }
+      else{
+        Utility().failedAlert(
+          "OTP didn't match",
+          "The otp you entered is not the same that has sent",
+        );
+      }
     }
-    else{
+    catch (e){
       Utility().failedAlert(
-        "OTP didn't match",
-        "The otp you entered is not the same that has sent",
+        "Failed",
+        "OTP can't be verified",
       );
     }
   }

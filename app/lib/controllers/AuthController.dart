@@ -19,9 +19,10 @@ class AuthController extends GetxController{
 
 
   sendOTP(var email, var otp) async{
-    this.isLoading.value = true;
+    isLoading.value = true;
     var body = {'email': email, 'otp': otp, 'app_key': appKey};
-    print(otp);
+
+    print("OTP: ${otp}");
 
     try{
       var response = await http.post(
@@ -33,14 +34,11 @@ class AuthController extends GetxController{
       var jsonResponse = jsonDecode(response.body);
 
       if(jsonResponse['status'] == '200'){
-        box.write('stored_otp', otp);
-        box.write('stored_email', email);
-
-        this.isLoading.value = false;
-        Get.toNamed('/verify');
+        isLoading.value = false;
+        Get.toNamed('/verify', arguments: [email, otp]);
       }
       else{
-        this.isLoading.value = false;
+        isLoading.value = false;
         Utility().failedAlert(
             "Failed to send otp",
             "Otp can't be sent, please try again"
@@ -48,14 +46,14 @@ class AuthController extends GetxController{
       }
     }
     catch(e){
-      this.isLoading.value = false;
+      isLoading.value = false;
       Utility().failedAlert("Failed", e.toString());
     }
   }
 
   //user authentication function
   authenticate(var email) async{
-    this.isLoading.value = true;
+    isLoading.value = true;
     var body = {'email': email, 'app_key': appKey};
 
     try{
@@ -68,16 +66,17 @@ class AuthController extends GetxController{
       var jsonResponse = jsonDecode(response.body);
 
       if(jsonResponse['status'] == '200'){
-        this.isLoading.value = false;
+        isLoading.value = false;
         box.write('stored_token', jsonResponse['token']);
-        Get.toNamed('/home');
+        Get.offAllNamed('/');
       }
       else if(jsonResponse['status'] == '404'){
-        this.isLoading.value = false;
+        isLoading.value = false;
+        box.write('stored_email', email);
         Get.toNamed('/register');
       }
       else{
-        this.isLoading.value = false;
+        isLoading.value = false;
         Utility().failedAlert(
           "Failed",
           "Authentication is not successful, please try again",
@@ -85,14 +84,14 @@ class AuthController extends GetxController{
       }
     }
     catch(e){
-      this.isLoading.value = false;
+      isLoading.value = false;
       Utility().failedAlert("Failed", e.toString());
     }
   }
 
   //user registration function
   register(var fullname, var storedEmail) async{
-    this.isLoading.value = true;
+    isLoading.value = true;
     var user = User(fullname: fullname, email: storedEmail);
 
     try{
@@ -104,13 +103,12 @@ class AuthController extends GetxController{
 
       var jsonResponse = jsonDecode(response.body);
 
-      print(jsonResponse);
-
       if(jsonResponse['status'] == '200'){
         //authenticating
         authenticate(storedEmail);
 
-        this.isLoading.value = false;
+        isLoading.value = false;
+        box.remove('stored_email');
 
         Utility().successAlert(
           "Successful",
@@ -118,7 +116,7 @@ class AuthController extends GetxController{
         );
       }
       else{
-        this.isLoading.value = false;
+        isLoading.value = false;
         Utility().failedAlert(
           "Failed",
           "Registration is not successful, please try again",
@@ -126,9 +124,15 @@ class AuthController extends GetxController{
       }
     }
     catch(e){
-      this.isLoading.value = false;
+      isLoading.value = false;
       Utility().failedAlert("Failed", e.toString());
     }
+  }
+
+  //logout
+  logOut(){
+    box.remove('stored_token');
+    Get.offAllNamed('/login');
   }
 
 }
